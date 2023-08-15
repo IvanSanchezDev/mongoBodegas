@@ -13,4 +13,20 @@ export class BodegaModel {
       console.error(error.message)
     }
   }
+
+  static async addBodegas ({ object }) {
+    try {
+      const db = await connect()
+      const bodegas = db.collection('bodegas')
+      console.log(object)
+      const { insertedId } = await bodegas.insertOne(object)
+      return {
+        id: insertedId,
+        ...object
+      }
+    } catch (error) {
+      console.error('Error al guardar la bodegas')
+      console.error(error.message)
+    }
+  };
 }
