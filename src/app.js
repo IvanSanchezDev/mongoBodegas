@@ -1,7 +1,7 @@
 import express from 'express'
-import appBodegas from './routes/bodega.routes'
-import appProductos from './routes/producto.routes'
-import appInventario from './routes/inventario.routes'
+import appBodegas from './routes/bodega.routes.js'
+import appProductos from './routes/producto.routes.js'
+import appInventario from './routes/inventario.routes.js'
 
 const app = express()
 app.use(express.json())
