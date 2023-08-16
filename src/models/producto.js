@@ -61,7 +61,7 @@ export class ProductoModel {
       )
 
       if (inventarioOrigen.value) {
-        await inventarios.findOneAndUpdate(
+        const inventarioDestino = await inventarios.findOneAndUpdate(
           {
             id_producto: object.idProducto,
             id_bodega: object.idBodegaDestino
@@ -70,29 +70,38 @@ export class ProductoModel {
           { session, returnOriginal: false }
         )
 
-        const historial = {
-          id_bodega_origen: object2.idBodegaOrigen,
-          id_bodega_destino: object2.idBodegaDestino,
-          cantidad: object2.cantidad,
-          id_inventario: inventarioOrigen.value._id
+        if (inventarioDestino.value) {
+          const historial = {
+            id_bodega_origen: object2.idBodegaOrigen,
+            id_bodega_destino: object2.idBodegaDestino,
+            cantidad: object2.cantidad,
+            id_inventario: inventarioOrigen.value._id
+          }
+
+          const result = await historiales.insertOne(historial, { session })
+
+          await session.commitTransaction() // Confirma la transacción.
+          session.endSession() // cierra la sesion
+
+          const { insertedId } = result
+
+          return { insertedId, message: 'Transaccion exitosa' }
+        } else {
+          await session.abortTransaction()
+          session.endSession()
+
+          return 'No se pudo actualizar inventario destino'
         }
-
-        const result = await historiales.insertOne(historial, { session })
-
-        await session.commitTransaction() // Confirma la transacción.
-        session.endSession() // cierra la sesion
-
-        return result
       } else {
         await session.abortTransaction() // Revoca la transacción en caso de algún error.
         session.endSession() // Finaliza la sesión en caso de error.
 
-        return 'No se pudo hacer correctamente la transaccion, verifique la informacion'
+        return 'No se pudo actualizar inventario origen o no hay suficiente stock'
       }
     } catch (error) {
       await session.abortTransaction()
       session.endSession()
-      console.log(error.message)
+      return 'Error durante la transacción'
     } finally {
       await closeConnection()
     }
