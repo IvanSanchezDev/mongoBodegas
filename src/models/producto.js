@@ -4,38 +4,79 @@ export class ProductoModel {
   static async getProductos () {
     try {
       const db = await connect()
-      const productos = db.collection('inventarios')
-      const result = productos.aggregate([
+      const inventarios = db.collection('inventarios')
+      const result = inventarios.aggregate([
         {
           $lookup: {
-            from: 'productos',
-            localField: 'id_producto',
-            foreignField: 'id',
-            as: 'producto'
+            from: 'bodegas',
+            let: {
+              id_bodega: '$id_bodega'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ['$_id', '$$id_bodega']
+                  }
+                }
+              }
+            ],
+            as: 't2'
           }
         },
         {
-          $unwind: '$producto'
+          $unwind: {
+            path: '$t2',
+            preserveNullAndEmptyArrays: false
+          }
+        },
+        {
+          $lookup: {
+            from: 'productos',
+            let: {
+              id_producto: '$id_producto'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ['$_id', '$$id_producto']
+                  }
+                }
+              }
+            ],
+            as: 't3'
+          }
+        },
+        {
+          $unwind: {
+            path: '$t3',
+            preserveNullAndEmptyArrays: false
+          }
         },
         {
           $group: {
             _id: {
-              id: '$producto.id',
-              nombre: '$producto.nombre'
+              t2_nombre: '$t2.nombre',
+              t3_nombre: '$t3.nombre'
             },
-            total: { $sum: '$cantidad' }
+            total: {
+              $sum: '$cantidad'
+            }
+          }
+        },
+        {
+          $sort: {
+            '_id.total': -1
           }
         },
         {
           $project: {
-            _id: 0,
-            id: '$_id.id',
-            nombre: '$_id.nombre',
-            total: { $toDouble: '$total' }
+            bodega: '$_id.t2_nombre',
+            producto: '$_id.t3_nombre',
+            total: 1,
+            _id: 0
           }
-        },
-        {
-          $sort: { total: -1 }
         }
       ]).toArray()
       return result
