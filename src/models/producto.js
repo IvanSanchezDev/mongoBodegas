@@ -46,9 +46,11 @@ export class ProductoModel {
 
   static async transladoProductos ({ object, object2 }) {
     const db = await connect()
-    const session = client.startSession()
+    const session = client.startSession() // inicia una nueva sesion en la bd
     try {
-      session.startTransaction()
+      session.startTransaction() // inicia una transaccion en la sesion
+
+      // A partir de este punto, todas las operaciones dentro de este bloque formarán parte de la misma transacción.
       const inventarios = db.collection('inventarios')
       const historiales = db.collection('historiales')
 
@@ -77,15 +79,15 @@ export class ProductoModel {
 
         const result = await historiales.insertOne(historial, { session })
 
-        await session.commitTransaction()
-        session.endSession()
+        await session.commitTransaction() // Confirma la transacción.
+        session.endSession() // cierra la sesion
 
         return result
       } else {
-        await session.abortTransaction()
-        session.endSession()
+        await session.abortTransaction() // Revoca la transacción en caso de algún error.
+        session.endSession() // Finaliza la sesión en caso de error.
 
-        return 'No se pudo hacer correctamente la transaccion, verifique el stock'
+        return 'No se pudo hacer correctamente la transaccion, verifique la informacion'
       }
     } catch (error) {
       await session.abortTransaction()
