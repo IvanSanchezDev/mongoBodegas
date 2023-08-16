@@ -12,7 +12,7 @@ export class InventarioController {
       res.status(201).json(newMovie)
     } catch (error) {
       console.log('Error en el controlador: ' + error.message)
-      res.status(500).json({ error: 'Error en el servidor' })
+      res.status(500).json({ error: 'Error al traer los datos' })
     }
   }
 }

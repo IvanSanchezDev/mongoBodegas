@@ -20,16 +20,19 @@ export class InventarioModel {
         )
         return result2
       } else {
-        console.log(object)
-        const { insertedId } = await inventarios.insertOne({ object })
+        const { insertedId } = await inventarios.insertOne({
+          id_producto: object.id_producto,
+          id_bodega: object.id_bodega,
+          cantidad: object.cantidad
+          // Otras propiedades aquí
+        })
         return {
           id: insertedId,
           ...object
         }
       }
     } catch (error) {
-      console.log('erorr modeloo')
-      console.log(error.errInfo.details.schemaRulesNotSatisfied[0].specifiedAs)
+      console.log(error.message)
     }
   }
 }

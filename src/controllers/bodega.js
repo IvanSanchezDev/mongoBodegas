@@ -3,8 +3,13 @@ import { BodegaModel } from '../models/bodega.js'
 
 export class BodegaController {
   static async getBodegas (req, res) {
-    const data = await BodegaModel.getBodegas()
-    res.json(data)
+    try {
+      const data = await BodegaModel.getBodegas()
+      res.status(200).json(data)
+    } catch (error) {
+      console.log('Error en el controlador: ' + error.message)
+      res.status(500).json({ error: 'Error al traer los datos' })
+    }
   }
 
   static async addBodegas (req, res) {

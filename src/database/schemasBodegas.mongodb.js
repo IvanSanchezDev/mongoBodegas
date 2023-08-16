@@ -265,6 +265,13 @@ db.productos.insertOne({
 })
 
 use('db_bodegas_campus')
+db.productos.insertOne({
+  nombre: 'Producto B',
+  descripcion: 'Descripción del Producto B',
+  estado: 1
+})
+
+use('db_bodegas_campus')
 const idUsuarioResponsable1 = db.usuarios.findOne({ nombre: 'Usuario A' })._id
 const idUsuarioResponsable2 = db.usuarios.findOne({ nombre: 'Usuario B' })._id
 
