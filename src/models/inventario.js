@@ -1,4 +1,4 @@
-import { connect } from '../database/connection.js'
+import { connect, closeConnection } from '../database/connection.js'
 
 export class InventarioModel {
   static async addInventario ({ object }) {

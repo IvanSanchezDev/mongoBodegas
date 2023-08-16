@@ -1,4 +1,4 @@
-import { connect, closeConnection } from '../database/connection.js'
+import { connect, closeConnection, client } from '../database/connection.js'
 
 export class ProductoModel {
   static async getProductos () {
@@ -45,58 +45,54 @@ export class ProductoModel {
   }
 
   static async transladoProductos ({ object, object2 }) {
+    const db = await connect()
+    const session = client.startSession()
     try {
-      const db = await connect()
+      session.startTransaction()
       const inventarios = db.collection('inventarios')
       const historiales = db.collection('historiales')
 
-      const inventarioOrigen = await inventarios.findOne({ id_producto: object.idProducto, id_bodega: object.idBodegaOrigen })
-      if (inventarioOrigen && inventarioOrigen.cantidad > object.cantidad) {
-        const updateBodegaOrigen = await inventarios.updateOne(
+      const inventarioOrigen = await inventarios.findOneAndUpdate(
+        { id_producto: object.idProducto, id_bodega: object.idBodegaOrigen, cantidad: { $gte: object.cantidad } },
+        { $inc: { cantidad: -object.cantidad } },
+        { session, returnOriginal: false }
+      )
+
+      if (inventarioOrigen.value) {
+        await inventarios.findOneAndUpdate(
           {
             id_producto: object.idProducto,
-            id_bodega: object.idBodegaOrigen
+            id_bodega: object.idBodegaDestino
           },
-          {
-            $inc: {
-              cantidad: -object.cantidad
-            }
-          })
+          { $inc: { cantidad: object.cantidad } },
+          { session, returnOriginal: false }
+        )
 
-        if (updateBodegaOrigen.modifiedCount > 0) {
-          const updateBodegaDestino = await inventarios.updateOne(
-            {
-              id_producto: object.idProducto,
-              id_bodega: object.idBodegaDestino
-            },
-            {
-              $inc: {
-                cantidad: +object.cantidad
-              }
-            }
-          )
-
-          if (updateBodegaDestino.modifiedCount > 0) {
-            console.log(object2)
-            const result = await historiales.insertOne(
-              {
-                id_bodega_origen: object2.idBodegaOrigen,
-                id_bodega_destino: object2.idBodegaDestino,
-                cantidad: object2.cantidad,
-                id_inventario: inventarioOrigen._id
-              })
-            return result
-          } else {
-            return 'No se puede actualizar inventario destino'
-          }
-        } else {
-          return 'No se puede actualizar inventario origen'
+        const historial = {
+          id_bodega_origen: object2.idBodegaOrigen,
+          id_bodega_destino: object2.idBodegaDestino,
+          cantidad: object2.cantidad,
+          id_inventario: inventarioOrigen.value._id
         }
+
+        const result = await historiales.insertOne(historial, { session })
+
+        await session.commitTransaction()
+        session.endSession()
+
+        return result
       } else {
-        return 'No se puede, la cantidad de productos es menor'
+        await session.abortTransaction()
+        session.endSession()
+
+        return 'No se pudo hacer correctamente la transaccion, verifique el stock'
       }
     } catch (error) {
+      await session.abortTransaction()
+      session.endSession()
       console.log(error.message)
+    } finally {
+      await closeConnection()
     }
   }
 }
