@@ -13,7 +13,7 @@ export class Bodega {
     constructor(data) {
         Object.assign(this, data);
         this.nombre = "Bodega San jorge";
-        this.id_responsable = "fg5f8rs24v1b36s5";
+        this.id_responsable = 1;
         this.estado = 1;
     }
 }
@@ -26,7 +26,8 @@ __decorate([
 __decorate([
     Expose({ name: 'idResponsable' }),
     IsDefined({ message: 'El ID del responsable de la bodega es obligatorio' }),
-    __metadata("design:type", String)
+    IsInt({ message: 'El estado de la bodega debe ser de tipo integer' }),
+    __metadata("design:type", Number)
 ], Bodega.prototype, "id_responsable", void 0);
 __decorate([
     Expose({ name: 'estadoBodega' }),

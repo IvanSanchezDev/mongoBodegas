@@ -3,7 +3,7 @@ import { connect, closeConnection } from '../database/connection.js'
 export class InventarioModel {
   static async addInventario ({ object }) {
     try {
-      const { id_producto, id_bodega, cantidad } = object
+      const { id,id_producto, id_bodega, cantidad } = object
       const db = await connect()
       const inventarios = db.collection('inventarios')
       const result = await inventarios.findOne({ id_producto, id_bodega })
@@ -21,10 +21,10 @@ export class InventarioModel {
         return result2
       } else {
         const { insertedId } = await inventarios.insertOne({
-          id_producto: object.id_producto,
-          id_bodega: object.id_bodega,
-          cantidad: object.cantidad
-          // Otras propiedades aquí
+          id,
+          id_producto,
+          id_bodega,
+          cantidad
         })
         return {
           id: insertedId,

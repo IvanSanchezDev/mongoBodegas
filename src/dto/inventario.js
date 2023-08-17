@@ -12,20 +12,20 @@ import { IsDefined, IsInt } from 'class-validator';
 export class Inventario {
     constructor(data) {
         Object.assign(this, data);
-        this.id_bodega = "fdg5611dfz56161zdf";
-        this.id_producto = "dfsdgd511fbnf525";
+        this.id_bodega = 1;
+        this.id_producto = 1;
         this.cantidad = 95;
     }
 }
 __decorate([
     Expose({ name: 'idBodega' }),
     IsDefined({ message: 'El ID de la bodega es obligatorio' }),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], Inventario.prototype, "id_bodega", void 0);
 __decorate([
     Expose({ name: 'idProducto' }),
     IsDefined({ message: 'El ID del producto es obligatorio' }),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], Inventario.prototype, "id_producto", void 0);
 __decorate([
     Expose({ name: 'cantidadInventario' }),

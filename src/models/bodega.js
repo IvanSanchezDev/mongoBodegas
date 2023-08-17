@@ -5,7 +5,7 @@ export class BodegaModel {
     try {
       const db = await connect()
       const bodegas = db.collection('bodegas')
-      const result = await bodegas.find({}).sort({ nombre: 1 }).toArray()
+      const result = await bodegas.find({}).sort({ nombre: -1 }).toArray()
 
       return result
     } catch (error) {

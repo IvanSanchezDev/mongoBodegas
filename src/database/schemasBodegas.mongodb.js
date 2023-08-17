@@ -4,15 +4,19 @@ db.createCollection('bodegas', {
     $jsonSchema: {
       bsonType: 'object',
       title: 'bodegas object validation',
-      required: ['nombre', 'id_responsable', 'estado'],
+      required: ['id', 'nombre', 'id_responsable', 'estado'],
       properties: {
+        id: {
+          bsonType: 'int',
+          description: 'el id de la bodega es requerido y debe ser de tipo integer'
+        },
         nombre: {
           bsonType: 'string',
           description: 'nombre de la bodega debe ser obligatorio y de tipo string'
         },
         id_responsable: {
-          bsonType: 'objectId',
-          description: 'ID del responsable de la bodega es requerido y debe ser de tipo objectId'
+          bsonType: 'int',
+          description: 'ID del responsable de la bodega es requerido y debe ser de tipo int'
         },
         estado: {
           bsonType: 'int',
@@ -49,23 +53,27 @@ db.createCollection('historiales', {
     $jsonSchema: {
       bsonType: 'object',
       title: 'historiales object validation',
-      required: ['cantidad', 'id_bodega_origen', 'id_bodega_destino', 'id_inventario'],
+      required: ['id', 'cantidad', 'id_bodega_origen', 'id_bodega_destino', 'id_inventario'],
       properties: {
+        id: {
+          bsonType: 'int',
+          description: 'el id de la bodega es requerido y debe ser de tipo integer'
+        },
         cantidad: {
           bsonType: 'int',
           description: 'cantidad en el histórico es requerida y debe ser de tipo integer'
         },
         id_bodega_origen: {
-          bsonType: 'objectId',
-          description: 'ID de la bodega de origen es requerido y debe ser de tipo ObjectId'
+          bsonType: 'int',
+          description: 'ID de la bodega de origen es requerido y debe ser de tipo int'
         },
         id_bodega_destino: {
-          bsonType: 'objectId',
-          description: 'ID de la bodega de destino es requerido y debe ser de tipo ObjectId'
+          bsonType: 'int',
+          description: 'ID de la bodega de destino es requerido y debe ser de tipo int'
         },
         id_inventario: {
-          bsonType: 'objectId',
-          description: 'ID del inventario es requerido y debe ser de tipo ObjectId'
+          bsonType: 'int',
+          description: 'ID del inventario es requerido y debe ser de tipo int'
         },
         created_by: {
           bsonType: 'objectId',
@@ -98,15 +106,19 @@ db.createCollection('inventarios', {
     $jsonSchema: {
       bsonType: 'object',
       title: 'inventarios object validation',
-      required: ['id_bodega', 'id_producto', 'cantidad'],
+      required: ['id', 'id_bodega', 'id_producto', 'cantidad'],
       properties: {
+        id: {
+          bsonType: 'int',
+          description: 'el id de la bodega es requerido y debe ser de tipo integer'
+        },
         id_bodega: {
-          bsonType: 'objectId',
-          description: 'ID de la bodega es requerido y debe ser de tipo ObjectId'
+          bsonType: 'int',
+          description: 'ID de la bodega es requerido y debe ser de tipo int'
         },
         id_producto: {
-          bsonType: 'objectId',
-          description: 'ID del producto es requerido y debe ser de tipo ObjectId'
+          bsonType: 'int',
+          description: 'ID del producto es requerido y debe ser de tipo int'
         },
         cantidad: {
           bsonType: 'int',
@@ -143,8 +155,12 @@ db.createCollection('productos', {
     $jsonSchema: {
       bsonType: 'object',
       title: 'productos object validation',
-      required: ['nombre', 'descripcion', 'estado'],
+      required: ['id', 'nombre', 'descripcion', 'estado'],
       properties: {
+        id: {
+          bsonType: 'int',
+          description: 'el id de la bodega es requerido y debe ser de tipo integer'
+        },
         nombre: {
           bsonType: 'string',
           description: 'nombre del producto es requerido y debe ser de tipo string'
@@ -188,8 +204,12 @@ db.createCollection('usuarios', {
     $jsonSchema: {
       bsonType: 'object',
       title: 'usuarios object validation',
-      required: ['nombre', 'email', 'password', 'estado'],
+      required: ['id', 'nombre', 'email', 'password', 'estado'],
       properties: {
+        id: {
+          bsonType: 'int',
+          description: 'el id de la bodega es requerido y debe ser de tipo integer'
+        },
         nombre: {
           bsonType: 'string',
           description: 'nombre del usuario es requerido y debe ser de tipo string'
@@ -242,6 +262,7 @@ db.createCollection('usuarios', {
 // INSERCION DE DATOS
 use('db_bodegas_campus')
 db.usuarios.insertMany([{
+  id: 1,
   nombre: 'Usuario A',
   email: 'usuario@example.com',
   email_verified_at: new Date(),
@@ -249,6 +270,7 @@ db.usuarios.insertMany([{
   password: 'contraseña_encriptada',
   estado: 1
 }, {
+  id: 2,
   nombre: 'Usuario B',
   email: 'usuarioB@example.com',
   email_verified_at: new Date(),
@@ -259,6 +281,7 @@ db.usuarios.insertMany([{
 
 use('db_bodegas_campus')
 db.productos.insertOne({
+  id: 1,
   nombre: 'Producto A',
   descripcion: 'Descripción del Producto A',
   estado: 1
@@ -266,22 +289,25 @@ db.productos.insertOne({
 
 use('db_bodegas_campus')
 db.productos.insertOne({
+  id: 2,
   nombre: 'Producto B',
   descripcion: 'Descripción del Producto B',
   estado: 1
 })
 
 use('db_bodegas_campus')
-const idUsuarioResponsable1 = db.usuarios.findOne({ nombre: 'Usuario A' })._id
-const idUsuarioResponsable2 = db.usuarios.findOne({ nombre: 'Usuario B' })._id
+const idUsuarioResponsable1 = db.usuarios.findOne({ nombre: 'Usuario A' }).id
+const idUsuarioResponsable2 = db.usuarios.findOne({ nombre: 'Usuario B' }).id
 
 db.bodegas.insertMany([
   {
+    id: 1,
     nombre: 'Bodega Principal',
     id_responsable: idUsuarioResponsable1,
     estado: 1
   },
   {
+    id: 2,
     nombre: 'Bodega Secundaria',
     id_responsable: idUsuarioResponsable2,
     estado: 1
@@ -290,22 +316,30 @@ db.bodegas.insertMany([
 
 use('db_bodegas_campus')
 
-const idBodega = db.bodegas.findOne({ nombre: 'Bodega Principal' })._id
-const idProducto = db.productos.findOne({ nombre: 'Producto A' })._id
+const idBodega = db.bodegas.findOne({ nombre: 'Bodega Principal' }).id
+const idBodega2 = db.bodegas.findOne({ nombre: 'Bodega Secundaria' }).id
+const idProducto = db.productos.findOne({ nombre: 'Producto A' }).id
 
-db.inventarios.insertOne({
+db.inventarios.insertMany([{
+  id: 1,
   id_bodega: idBodega,
   id_producto: idProducto,
   cantidad: 200
-})
+}, {
+  id: 2,
+  id_bodega: idBodega2,
+  id_producto: idProducto,
+  cantidad: 100
+}])
 
 use('db_bodegas_campus')
 
-const idBodega1 = db.bodegas.findOne({ nombre: 'Bodega Principal' })._id
-const idBodega2 = db.bodegas.findOne({ nombre: 'Bodega Secundaria' })._id
-const inventario = db.inventarios.findOne({ id_bodega: idBodega, id_producto: idProducto })._id
+const idBodega1 = db.bodegas.findOne({ nombre: 'Bodega Principal' }).id
+// const idBodega2 = db.bodegas.findOne({ nombre: 'Bodega Secundaria' }).id
+const inventario = db.inventarios.findOne({ id_bodega: idBodega, id_producto: idProducto }).id
 
 db.historiales.insertOne({
+  id: 1,
   cantidad: 100,
   id_bodega_origen: idBodega1,
   id_bodega_destino: idBodega2,

@@ -9,7 +9,8 @@ export class Bodega {
 
     @Expose({ name: 'idResponsable' })
     @IsDefined({ message: 'El ID del responsable de la bodega es obligatorio' })
-    id_responsable: string; 
+    @IsInt({ message: 'El estado de la bodega debe ser de tipo integer' })
+    id_responsable: number; 
 
     @Expose({ name: 'estadoBodega' })
     @IsDefined({ message: 'El estado de la bodega es obligatorio' })
@@ -34,7 +35,7 @@ export class Bodega {
     constructor(data: Partial<Bodega>) {
         Object.assign(this, data);
         this.nombre="Bodega San jorge";
-        this.id_responsable="fg5f8rs24v1b36s5";
+        this.id_responsable=1;
         this.estado=1
     }
 }

@@ -16,7 +16,7 @@ export class ProductoModel {
               {
                 $match: {
                   $expr: {
-                    $eq: ['$_id', '$$id_bodega']
+                    $eq: ['$id', '$$id_bodega']
                   }
                 }
               }
@@ -40,7 +40,7 @@ export class ProductoModel {
               {
                 $match: {
                   $expr: {
-                    $eq: ['$_id', '$$id_producto']
+                    $eq: ['$id', '$$id_producto']
                   }
                 }
               }
@@ -85,7 +85,7 @@ export class ProductoModel {
     }
   }
 
-  static async transladoProductos ({ object, object2 }) {
+  static async transladoProductos ({ object }) {
     const db = await connect()
     const session = client.startSession() // inicia una nueva sesion en la bd
     try {
@@ -95,28 +95,31 @@ export class ProductoModel {
       const inventarios = db.collection('inventarios')
       const historiales = db.collection('historiales')
 
+      const { id, id_producto, id_bodega_origen, id_bodega_destino, cantidad } = object
+
       const inventarioOrigen = await inventarios.findOneAndUpdate(
-        { id_producto: object.idProducto, id_bodega: object.idBodegaOrigen, cantidad: { $gte: object.cantidad } },
-        { $inc: { cantidad: -object.cantidad } },
+        { id_producto, id_bodega: id_bodega_origen, cantidad: { $gte: cantidad } },
+        { $inc: { cantidad: -cantidad } },
         { session, returnOriginal: false }
       )
 
       if (inventarioOrigen.value) {
         const inventarioDestino = await inventarios.findOneAndUpdate(
           {
-            id_producto: object.idProducto,
-            id_bodega: object.idBodegaDestino
+            id_producto,
+            id_bodega: id_bodega_destino
           },
-          { $inc: { cantidad: object.cantidad } },
+          { $inc: { cantidad } },
           { session, returnOriginal: false }
         )
 
         if (inventarioDestino.value) {
           const historial = {
-            id_bodega_origen: object2.idBodegaOrigen,
-            id_bodega_destino: object2.idBodegaDestino,
-            cantidad: object2.cantidad,
-            id_inventario: inventarioOrigen.value._id
+            id,
+            id_bodega_origen,
+            id_bodega_destino,
+            cantidad,
+            id_inventario: inventarioOrigen.value.id
           }
 
           const result = await historiales.insertOne(historial, { session })

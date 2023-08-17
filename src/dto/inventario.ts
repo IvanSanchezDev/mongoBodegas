@@ -4,11 +4,11 @@ import { IsDefined, IsInt } from 'class-validator';
 export class Inventario {
     @Expose({ name: 'idBodega' })
     @IsDefined({ message: 'El ID de la bodega es obligatorio' })
-    id_bodega: string; 
+    id_bodega: number; 
 
     @Expose({ name: 'idProducto' })
     @IsDefined({ message: 'El ID del producto es obligatorio' })
-    id_producto: string; 
+    id_producto: number; 
 
     @Expose({ name: 'cantidadInventario' })
     @IsDefined({ message: 'La cantidad en el inventario es obligatoria' })
@@ -32,8 +32,8 @@ export class Inventario {
     
     constructor(data: Partial<Inventario>) {
         Object.assign(this, data);
-        this.id_bodega="fdg5611dfz56161zdf";
-        this.id_producto="dfsdgd511fbnf525";
+        this.id_bodega=1;
+        this.id_producto=1;
         this.cantidad=95
     }
 }

@@ -14,11 +14,11 @@ export class BodegaController {
 
   static async addBodegas (req, res) {
     try {
-      const { nombre, id_responsable, estado } = req.body
-      const objectId = new ObjectId(id_responsable)
-      const bodega = { nombre, id_responsable: objectId, estado }
-      const newMovie = await BodegaModel.addBodegas({ object: bodega })
-      res.status(201).json(newMovie)
+      const { id, nombre, id_responsable, estado } = req.body
+      // const objectId = new ObjectId(id_responsable)
+      const bodega = { id, nombre, id_responsable, estado }
+      const newBodega = await BodegaModel.addBodegas({ object: bodega })
+      res.status(201).json(newBodega)
     } catch (error) {
       console.log('Error en el controlador: ' + error.message)
       res.status(500).json({ error: 'Error en el servidor' })
