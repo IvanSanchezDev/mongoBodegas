@@ -43,7 +43,7 @@
 
 - Realizar un EndPolnt que permita listar todas las bodegas ordenadas alfabéticamente.
 
-	##### GET=> http://127.0.0.1:1234/api/bodega/getBodegas.
+	##### GET=> http://127.0.0.1:1234/api/bodega/getBodegas
 
 - Realizar un EndPolnt que permita crear una bodegas.(agregar en los comentarios de la función los datos de entrada).
 
@@ -51,32 +51,31 @@
 
 ​		*Datos de entrada :* 
 		{
+		
+		"id":3,
 
-​		"nombre":"Bodega San Pedro", 
+​		"nombreBodega":"Bodega San Pedro", 
 
-​		"id_responsable":"jug68s4f151c7ers",
+​		"idResponsable":1,
 
-​		 "estado":1
+​		 "estadoBodega":1
 
  		}
 
 - Realizar un EndPoint que permita listar todos los productos en orden descendente por el campo "Total".
 
-	##### 	GET => http://127.0.0.1:5001:1234/api/producto/getTotalProductos.
+	##### 	GET => http://127.0.0.1:1234/api/producto/getTotalProductos
 
 - Realizar un EndPoint que permita insertar registros en la tabla de inventarios, los parámetros de entrada deben ser (id_producto,id_bodega,cantidad).
 
 	##### 	POST => http://127.0.0.1:1234/api/inventario/addInventario
 
 ​		*Datos de entrada:* 
-		{
-
-​		"id_producto":"64dd7aabd641859c2dc4ed9d", 
-
-​		"id_bodega":"64dd7aacd641859c2dc4ed9f", 
-
-​		"cantidad":150
-
+		{			
+			"id":3,
+		​	 "idProducto":2, 
+		​	 "idBodega":2, 
+		​	  "cantidadInventario":150
 ​		}
 
 - Realizar un EndPolnt que permita Trasladar un producto de una bodega a otra
@@ -85,13 +84,9 @@
 
 ​		*Datos de entrada* : 
 		{
-
-​		"id_producto":"64dd7aabd641859c2dc4ed9d", 
-
-​		"id_bodega_origen":"64dd7aacd641859c2dc4ed9f", 
-
-​		"id_bodega_destino":"64dd7aacd641859c2dc4eda0",
-
-​		 "cantidad":30
-
-​		}
+			"id":2,
+			"id_producto":1, 
+			"id_bodega_origen":1, 
+			"id_bodega_destino":2,
+			"cantidad":30
+		}
