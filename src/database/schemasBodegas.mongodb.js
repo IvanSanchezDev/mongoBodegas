@@ -303,10 +303,11 @@ use('db_bodegas_campus')
 
 const idBodega1 = db.bodegas.findOne({ nombre: 'Bodega Principal' })._id
 const idBodega2 = db.bodegas.findOne({ nombre: 'Bodega Secundaria' })._id
+const inventario = db.inventarios.findOne({ id_bodega: idBodega, id_producto: idProducto })._id
 
 db.historiales.insertOne({
   cantidad: 100,
   id_bodega_origen: idBodega1,
   id_bodega_destino: idBodega2,
-  id_inventario: ObjectId('64da2e43b3840001fc8a89c7')
+  id_inventario: inventario
 })
