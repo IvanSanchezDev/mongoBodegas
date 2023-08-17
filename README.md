@@ -26,15 +26,15 @@
 
 1. Primero debe generar el token de acceso a los diferentes endpoints => http://127.0.0.1:1234/api/token/:coleccion
 
-**coleccion:** corresponde al nombre del recurso a la cual desee acceder en este caso existen 3: ['bodega', 'inventario', 'producto']
+	**coleccion:** corresponde al nombre del recurso a la cual desee acceder en este caso existen 3: ['bodega', 'inventario', 'producto']
 
-**Ejemplo:** entonces quedaria asi para acceder a los recursos de bodega: http://127.0.0.1:1234/api/token/bodega
+	**Ejemplo:** entonces quedaria asi para acceder a los recursos de bodega: http://127.0.0.1:1234/api/token/bodega
 
 
 
 2. Copiar el token generado y pegarlo en los headers con el nombre Authorization
 
-**Ejemplo:** Authorization: codigojwtCopiado
+	**Ejemplo:** Authorization: codigojwtCopiado
 
    
 
@@ -43,11 +43,11 @@
 
 - Realizar un EndPolnt que permita listar todas las bodegas ordenadas alfabéticamente.
 
-##### 		 GET=> http://127.0.0.1:1234/api/bodega/getBodegas.
+	##### GET=> http://127.0.0.1:1234/api/bodega/getBodegas.
 
 - Realizar un EndPolnt que permita crear una bodegas.(agregar en los comentarios de la función los datos de entrada).
 
-#####  		POST=>http://127.0.0.1:1234/api/bodega/addBodegas
+	#####  POST=>http://127.0.0.1:1234/api/bodega/addBodegas
 
 ​		*Datos de entrada :* 
 		{
@@ -62,11 +62,11 @@
 
 - Realizar un EndPoint que permita listar todos los productos en orden descendente por el campo "Total".
 
-##### 		GET => http://127.0.0.1:5001:1234/api/producto/getTotalProductos.
+	##### 	GET => http://127.0.0.1:5001:1234/api/producto/getTotalProductos.
 
 - Realizar un EndPoint que permita insertar registros en la tabla de inventarios, los parámetros de entrada deben ser (id_producto,id_bodega,cantidad).
 
-##### 		POST => http://127.0.0.1:1234/api/inventario/addInventario
+	##### 	POST => http://127.0.0.1:1234/api/inventario/addInventario
 
 ​		*Datos de entrada:* 
 		{
@@ -81,7 +81,7 @@
 
 - Realizar un EndPolnt que permita Trasladar un producto de una bodega a otra
 
-##### 		 POST => http://127.0.0.1:1234/api/producto/transladoProductos
+	##### POST => http://127.0.0.1:1234/api/producto/transladoProductos
 
 ​		*Datos de entrada* : 
 		{
